@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "world-wall-clock"
+version = "0.1.0"
+description = "TUI world clock application"
+authors = ["Dominic Delabruere <dominic.delabruere@gmail.com>"]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+packages = [{include = "world_wall_clock"}]
+repository = "https://github.com/ddelabru/world-wall-clock"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+urwid = "^2.2.2"
+xdg-base-dirs = "^6.0.1"
+tzdata = "^2023.3"
+
+[tool.poetry.scripts]
+wwclock = "world_wall_clock.wwclock:main"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
