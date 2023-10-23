@@ -360,7 +360,7 @@ class App:
             [urwid.Text(" ")], 1, 0, 0, "left"
         )
         self.clocks: list[ClockWidget] = [
-            ClockWidget(font=urwid.font.HalfBlock5x4Font(), precision="seconds")
+            ClockWidget(font=urwid.Thin6x6Font(), precision="seconds")
         ]
         self.fill_clock_grid(rebuild_clocks=True)
         self.update_clocks()
