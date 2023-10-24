@@ -17,7 +17,7 @@ You can install world-wall-clock with the Python packaging tool
 python -m pip install world-wall-clock
 ```
 
-### From the top level of the source repo.
+### From the top level of the source repo
 
 ```sh
 python -m pip install .
@@ -49,7 +49,12 @@ application configuration directory for the next time you launch
 world-wall-clock.
 
 Using the "Custom time" radio button, you can switch the application into custom
-time mode
+time mode. Edit the custom time to display by navigating to the numerical
+datetime fields next to the custom time button and typing over their current
+values (these are edited in "replace" rather than "insert" mode). The reference
+timezone for the custom time can be changed by navigating up or down from the
+timezone listed at the end of the custom time fields; the list of timezones
+you can pick from here is populated from the timezones of your displayed clocks.
 
 ## Dependencies
 
