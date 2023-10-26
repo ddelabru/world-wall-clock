@@ -323,33 +323,39 @@ class MinuteEdit(DatetimeIntEdit):
 class ActiveTZPicker(urwid.ListBox):
     def __init__(self, foreign_clocks: list[str], dp: DatetimePicker) -> None:
         self.dp: DatetimePicker = dp
-        self.list_walker: urwid.SimpleFocusListWalker = urwid.SimpleFocusListWalker(
-            [], wrap_around=True
-        )
-        self.update_tz_list(foreign_clocks)
+        new_items: list[urwid.AttrMap[urwid.Text]] = [self.wrap_label("local")] + [
+            self.wrap_label(tz) for tz in foreign_clocks
+        ]
+        self.list_walker: urwid.SimpleFocusListWalker[
+            urwid.attrMap[urwid.Text]
+        ] = urwid.SimpleFocusListWalker(new_items, wrap_around=True)
         super().__init__(self.list_walker)
 
-    def update_tz_list(self, foreign_clocks: list[str]) -> None:
-        old_focus_item = (
-            self.list_walker.get_focus()[0] if len(self.list_walker) else None
-        )
-        new_items: list[urwid.AttrMap[urwid.Text]] = [
-            urwid.AttrMap(urwid.Text("local"), None, "focus")
-        ] + [urwid.AttrMap(urwid.Text(tz), None, "focus") for tz in foreign_clocks]
-        self.list_walker.clear()
-        self.list_walker.extend(new_items)
-        try:
-            assert old_focus_item is not None
-            new_index: int = foreign_clocks.index(old_focus_item.base_widget.text) + 1
-            self.list_walker.set_focus(new_index)
-        except (AssertionError, ValueError):
-            self.list_walker.set_focus(0)
+    def update_tz_labels(self, foreign_clocks: list[str]) -> None:
+        for i in range(len(foreign_clocks)):
+            self.list_walker[i + 1].base_widget.set_text(foreign_clocks[i])
+
+    def wrap_label(self, label: str) -> urwid.AttrMap:
+        return urwid.AttrMap(urwid.Text(label), None, "focus")
+
+    def append(self, label: str) -> None:
+        self.list_walker.append(self.wrap_label(label))
+
+    def remove(self, label: str) -> None:
+        current_labels: list[str] = [am.base_widget.text for am in self.list_walker]
+        self.list_walker.pop(current_labels.index(label))
 
     def get_tz(self) -> Optional[tzinfo]:
         focus_item, focus_index = self.list_walker.get_focus()
         if not focus_index:
             return None
         return ZoneInfo(focus_item.base_widget.text)
+
+    def change_focus(self, *args, **kwargs) -> None:
+        super().change_focus(*args, **kwargs)
+        urwid.emit_signal(self, "postchange")
+
+    signals: list[str] = ["postchange"]
 
 
 class App:
@@ -372,8 +378,10 @@ class App:
         ) -> Optional[tuple[urwid.CheckBox, bool]]:
             if old_state:
                 self.foreign_clocks.remove(cb.label)
+                self.dp.tz.remove(cb.label)
             else:
                 self.foreign_clocks.append(cb.label)
+                self.dp.tz.append(cb.label)
             self.write_clock_list()
             self.fill_clock_grid(rebuild_clocks=True)
             return None
@@ -395,8 +403,10 @@ class App:
             state=self.current,
             on_state_change=self.set_current,
         )
-        custom_button = urwid.RadioButton(time_options, "Custom time:")
-        datetime_editor = self.construct_datetime_editor(datetime.now(), custom_button)
+        self.custom_button = urwid.RadioButton(time_options, "Custom time:")
+        datetime_editor = self.construct_datetime_editor(
+            datetime.now(), self.custom_button
+        )
         left_pile: urwid.Pile = urwid.Pile([("pack", self.clocks[0]), list_box])
         right_pile: urwid.Pile = urwid.Pile(
             [grid_filler, ("pack", current_button), ("pack", datetime_editor)]
@@ -448,11 +458,15 @@ class App:
             (1, urwid.Text(" ")),
             urwid.Padding(urwid.BoxAdapter(self.dp.tz, 1), align="left", width="pack"),
         ]
-        for w in (self.dp.year, self.dp.month, self.dp.day, self.dp.hour, self.dp.mins):
+        for w in (
+            self.dp.year,
+            self.dp.month,
+            self.dp.day,
+            self.dp.hour,
+            self.dp.mins,
+            self.dp.tz,
+        ):
             urwid.connect_signal(w, "postchange", self.update_clocks_on_signal)
-        urwid.connect_signal(
-            self.dp.tz.list_walker, "modified", self.update_clocks_on_signal
-        )
         return urwid.Columns(widgets)
 
     def fill_clock_grid(self, rebuild_clocks: bool = False) -> None:
@@ -464,8 +478,6 @@ class App:
             (c, self.grid_flow.options(width_amount=c.pack(None)[0]))
             for c in self.clocks[1:]
         ] or [(urwid.Text(" "), self.grid_flow.options())]
-        if hasattr(self, "dp"):
-            self.dp.tz.update_tz_list(self.foreign_clocks)
 
     def handle_input(self, key: str) -> None:
         if key in {"q", "Q", "ctrl q", "esc"}:
@@ -492,6 +504,7 @@ class App:
             self.fill_clock_grid()
 
     def update_clocks_on_signal(self, *args, **kwargs) -> None:
+        self.custom_button.set_state(True)
         self.update_clocks()
 
     def update_clocks_if_current(self) -> None:
