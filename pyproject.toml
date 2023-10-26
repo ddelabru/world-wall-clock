@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "world-wall-clock"
-version = "0.1.1"
+version = "0.1.2"
 description = "TUI world clock application"
 authors = ["Dominic Delabruere <dominic.delabruere@gmail.com>"]
 license = "GPL-3.0-or-later"
@@ -17,6 +17,13 @@ tzdata = ">=2023.3"
 [tool.poetry.scripts]
 wwclock = "world_wall_clock.wwclock:main"
 
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.1.0"
+mypy = "^1.6.1"
+black = ">=23.10.1"
+
+[tool.black]
+target-version = ["py310"]
 
 [build-system]
 requires = ["poetry-core"]

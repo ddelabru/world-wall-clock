@@ -70,3 +70,27 @@ information if this is not already present on the system.
 world-wall-clock uses [Poetry](https://python-poetry.org/) to manage builds and
 dependencies. The Python code is formatted using
 [Black](https://github.com/psf/black).
+
+With Poetry installed, set up a Poetry environment with all of
+world-wall-clock's runtime and dev dependencies; from the top level of the
+source repo, run:
+
+```sh
+poetry install
+```
+
+Now you can modify the source code and run the application with any changes
+you've made using the `poetry run` command:
+
+```sh
+poetry run wwclock
+```
+
+The `poetry run` command will also allow you to run the suite of chosen dev
+tools for static type-checking, code formatting, and linting:
+
+```sh
+poetry run mypy --strict
+poetry run black .
+poetry run flake8
+```
