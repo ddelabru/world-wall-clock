@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Any, Optional
 from zoneinfo import available_timezones, ZoneInfo
 
-import urwid
+import urwid  # type: ignore
 from xdg_base_dirs import xdg_config_home
 
 from . import VERSION
@@ -41,7 +41,7 @@ DEFAULT_CLOCKS: list[str] = [
 ]
 
 
-class EventLoop(urwid.SelectEventLoop):
+class EventLoop(urwid.SelectEventLoop):  # type: ignore
     def __init__(self, update_fn: Callable[[], Any], refresh_rate: float) -> None:
         self.update_fn: Callable[[], Any] = update_fn
         self.tick_secs: float = 1.0 / refresh_rate
@@ -58,7 +58,7 @@ class EventLoop(urwid.SelectEventLoop):
         super().run()
 
 
-class ClockWidget(urwid.LineBox):
+class ClockWidget(urwid.LineBox):  # type: ignore
     def __init__(
         self,
         tzkey: Optional[str] = None,
@@ -122,7 +122,7 @@ class ClockWidget(urwid.LineBox):
         return self.get_ideal_width() + 2, self._clock_h + 2
 
 
-class DatetimeIntEdit(urwid.IntEdit):
+class DatetimeIntEdit(urwid.IntEdit):  # type: ignore
     def __init__(self, maxlen: int, default: int = 0) -> None:
         self.maxlen: int = maxlen
         padded: str = str(default).rjust(maxlen, "0")
@@ -320,7 +320,7 @@ class MinuteEdit(DatetimeIntEdit):
         return f"{new_value:02}", edit_pos + length
 
 
-class ActiveTZPicker(urwid.ListBox):
+class ActiveTZPicker(urwid.ListBox):  # type: ignore
     def __init__(self, foreign_clocks: list[str], dp: DatetimePicker) -> None:
         self.dp: DatetimePicker = dp
         new_items: list[urwid.AttrMap[urwid.Text]] = [self.wrap_label("local")] + [
@@ -351,7 +351,7 @@ class ActiveTZPicker(urwid.ListBox):
             return None
         return ZoneInfo(focus_item.base_widget.text)
 
-    def change_focus(self, *args, **kwargs) -> None:
+    def change_focus(self, *args: list[Any], **kwargs: dict[str, Any]) -> None:
         super().change_focus(*args, **kwargs)
         urwid.emit_signal(self, "postchange")
 
@@ -503,7 +503,9 @@ class App:
         if title_change:
             self.fill_clock_grid()
 
-    def update_clocks_on_signal(self, *args, **kwargs) -> None:
+    def update_clocks_on_signal(
+        self, *args: list[Any], **kwargs: dict[str, Any]
+    ) -> None:
         self.custom_button.set_state(True)
         self.update_clocks()
 
@@ -528,8 +530,8 @@ class App:
         try:
             with open(config_path, "r") as f:
                 clocks: list[str] = json.load(f)["clocks"]
-            assert type(clocks) == list
-            assert all(type(i) == str for i in clocks)
+            assert isinstance(clocks, list)
+            assert all(isinstance(i, str) for i in clocks)
         except Exception:
             clocks = DEFAULT_CLOCKS.copy()
 

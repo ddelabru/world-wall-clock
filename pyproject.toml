@@ -17,6 +17,13 @@ tzdata = ">=2023.3"
 [tool.poetry.scripts]
 wwclock = "world_wall_clock.wwclock:main"
 
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.1.0"
+mypy = "^1.6.1"
+black = ">=23.10.1"
+
+[tool.black]
+target-version = ["py310"]
 
 [build-system]
 requires = ["poetry-core"]
