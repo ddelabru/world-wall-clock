@@ -16,8 +16,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Install dependencies
+    - name: Setup Poetry
       uses: docker://docker.io/sunpeek/poetry:py3.10-slim
+    - name: Install dependencies
       run: |
         poetry install
     - name: Check types with mypy
