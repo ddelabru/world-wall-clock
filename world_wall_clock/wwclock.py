@@ -16,24 +16,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from . import VERSION
+
 import abc
 from argparse import ArgumentParser, Namespace
 from collections.abc import Callable
 from datetime import date, datetime, timezone, tzinfo
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Set, Tuple
+from typing import Any, List, Literal, Optional, Set, Tuple
 from zoneinfo import available_timezones, ZoneInfo
 
 import urwid
-
-try:
-    from urwid.curses_display import Screen
-except:
-    from urwid.raw_display import Screen
 from xdg_base_dirs import xdg_config_home
 
-from . import VERSION
+CURSES_AVAILABLE: bool
+try:
+    import urwid.curses_display
+
+    CURSES_AVAILABLE = True
+except ImportError:
+    import urwid.raw_display
+
+    CURSES_AVAILABLE = False
 
 
 DEFAULT_CLOCKS: List[str] = [
@@ -478,11 +483,16 @@ class App:
                 "default",
             )
         }
+        screen: urwid.BaseScreen = (
+            urwid.curses_display.Screen()
+            if CURSES_AVAILABLE
+            else urwid.raw_display.Screen()
+        )
         self.main_loop: urwid.MainLoop = MainLoop(
             columns,
             unhandled_input=self.handle_input,
             palette=palette,
-            screen=Screen(),
+            screen=screen,
             update_fn=self.update_clocks_if_current,
             refresh_rate=10.0,
         )
