@@ -26,6 +26,11 @@ from typing import Any, Dict, List, Literal, Optional, Set, Tuple
 from zoneinfo import available_timezones, ZoneInfo
 
 import urwid
+
+try:
+    from urwid.curses_display import Screen
+except:
+    from urwid.raw_display import Screen
 from xdg_base_dirs import xdg_config_home
 
 from . import VERSION
@@ -412,7 +417,7 @@ class App:
         self.current: bool = True
         self.foreign_clocks: List[str] = self.load_clock_list()
         self.grid_flow: urwid.GridFlow = urwid.GridFlow(
-            [urwid.Text(" ")], 1, 0, 0, "left",
+            [urwid.Text(" ")], 1, 0, 0, "left"
         )
         self.clocks: List[ClockWidget] = [
             ClockWidget(font=urwid.Thin6x6Font(), precision="seconds")
@@ -477,6 +482,7 @@ class App:
             columns,
             unhandled_input=self.handle_input,
             palette=palette,
+            screen=Screen(),
             update_fn=self.update_clocks_if_current,
             refresh_rate=10.0,
         )
