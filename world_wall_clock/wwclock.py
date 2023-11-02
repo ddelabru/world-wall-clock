@@ -16,21 +16,30 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from . import VERSION
+
+import abc
 from argparse import ArgumentParser, Namespace
 from collections.abc import Callable
 from datetime import date, datetime, timezone, tzinfo
 import json
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, List, Literal, Optional, Set, Tuple
 from zoneinfo import available_timezones, ZoneInfo
 
-import urwid  # type: ignore
+import urwid
 from xdg_base_dirs import xdg_config_home
 
-from . import VERSION
+CURSES_AVAILABLE: bool
+try:
+    import urwid.curses_display
+
+    CURSES_AVAILABLE = True
+except ImportError:
+    CURSES_AVAILABLE = False
 
 
-DEFAULT_CLOCKS: list[str] = [
+DEFAULT_CLOCKS: List[str] = [
     "Pacific/Niue",
     "America/Santiago",
     "UTC",
@@ -41,24 +50,7 @@ DEFAULT_CLOCKS: list[str] = [
 ]
 
 
-class EventLoop(urwid.SelectEventLoop):  # type: ignore
-    def __init__(self, update_fn: Callable[[], Any], refresh_rate: float) -> None:
-        self.update_fn: Callable[[], Any] = update_fn
-        self.tick_secs: float = 1.0 / refresh_rate
-        super().__init__()
-
-    def tick(self) -> None:
-        self.update_fn()
-        self.current_alarm: tuple[float, int, Callable[[], Any]] = self.alarm(
-            self.tick_secs, self.tick
-        )
-
-    def run(self) -> None:
-        self.tick()
-        super().run()
-
-
-class ClockWidget(urwid.LineBox):  # type: ignore
+class ClockWidget(urwid.LineBox):
     def __init__(
         self,
         tzkey: Optional[str] = None,
@@ -72,14 +64,14 @@ class ClockWidget(urwid.LineBox):  # type: ignore
         self._big_text: urwid.BigText = urwid.BigText("", font)
         self._title: Optional[str] = ""
         dt: datetime = self.update_clock()[0]
-        clock_size: tuple[int, int] = self._big_text.pack(())
+        clock_size: Tuple[int, int] = self._big_text.pack(())
         self._clock_w: int = max(clock_size[0], ISO_DATE_LENGTH)
         self._clock_h: int = clock_size[1]
         iso_date: str = dt.date().isoformat()
         self._date_text: urwid.Text = urwid.Text(iso_date, align="center")
         ideal_width: int = self.get_ideal_width()
         big_padding: urwid.Padding = urwid.Padding(
-            self._big_text, align="center", width=None, min_width=ideal_width
+            self._big_text, align="center", width="clip", min_width=ideal_width
         )
         pile: urwid.Pile = urwid.Pile(
             [("pack", big_padding), ("pack", self._date_text)]
@@ -106,7 +98,7 @@ class ClockWidget(urwid.LineBox):  # type: ignore
             self.set_title(self._title)
         return old_title != self._title
 
-    def update_clock(self, ts: Optional[float] = None) -> tuple[datetime, bool]:
+    def update_clock(self, ts: Optional[float] = None) -> Tuple[datetime, bool]:
         dt: datetime = (
             datetime.fromtimestamp(ts, self.tz) if ts else datetime.now(self.tz)
         )
@@ -116,19 +108,18 @@ class ClockWidget(urwid.LineBox):  # type: ignore
         title_change: bool = self.update_title(dt)
         return dt, title_change
 
-    def pack(
-        self, size: Optional[tuple[int]] = None, focus: bool = False
-    ) -> tuple[int, int]:
+    def pack(self, size: Any | None = None, focus: bool = False) -> Tuple[int, int]:
         return self.get_ideal_width() + 2, self._clock_h + 2
 
 
-class DatetimeIntEdit(urwid.IntEdit):  # type: ignore
+class DatetimeIntEdit(urwid.IntEdit):
     def __init__(self, maxlen: int, default: int = 0) -> None:
         self.maxlen: int = maxlen
         padded: str = str(default).rjust(maxlen, "0")
         super().__init__("", padded)
+        self.set_edit_pos(0)
 
-    def keypress(self, size: tuple[int], key: str) -> Optional[str]:
+    def keypress(self, size: Tuple[int], key: str) -> Optional[str]:
         if self.edit_pos >= self.maxlen:
             self.set_edit_pos(self.maxlen - 1)
         if key in {"up", "down"}:
@@ -145,18 +136,29 @@ class DatetimeIntEdit(urwid.IntEdit):  # type: ignore
             return unhandled or "right"
         return unhandled
 
-    def get_pref_col(self, size: tuple[int]) -> int | str | None:
-        return "left"
+
+class ListBoxMeta(urwid.WidgetMeta, abc.ABCMeta):
+    pass
+
+
+class TZPickerBase(urwid.ListBox, metaclass=ListBoxMeta):
+    def append(self, label: str) -> None:
+        pass
+
+    def remove(self, label: str) -> None:
+        pass
+
+    def get_tz(self) -> Optional[tzinfo]:
+        return None
 
 
 class DatetimePicker(object):
-    def __init__(self) -> None:
-        self.year: urwid.IntEdit = DatetimeIntEdit(4)
-        self.month: urwid.IntEdit = DatetimeIntEdit(2)
-        self.day: urwid.IntEdit = DatetimeIntEdit(2)
-        self.hour: urwid.IntEdit = DatetimeIntEdit(2)
-        self.mins: urwid.IntEdit = DatetimeIntEdit(2)
-        self.tz: urwid.ListBox = urwid.ListBox(urwid.SimpleFocusListWalker([]))
+    year: DatetimeIntEdit
+    month: DatetimeIntEdit
+    day: DatetimeIntEdit
+    hour: DatetimeIntEdit
+    mins: DatetimeIntEdit
+    tz: TZPickerBase
 
 
 class YearEdit(DatetimeIntEdit):
@@ -164,7 +166,7 @@ class YearEdit(DatetimeIntEdit):
         self.dp: DatetimePicker = dp
         super().__init__(4, default)
 
-    def insert_text_result(self, text: str) -> tuple[str, int]:
+    def insert_text_result(self, text: str | bytes) -> Tuple[str, int]:
         if self.edit_pos == 4:
             return self.edit_text, 3
         length: int = len(text)
@@ -195,7 +197,7 @@ class MonthEdit(DatetimeIntEdit):
         self.dp: DatetimePicker = dp
         super().__init__(2, default)
 
-    def insert_text_result(self, text: str) -> tuple[str, int]:
+    def insert_text_result(self, text: str | bytes) -> Tuple[str, int]:
         edit_pos: int = self.edit_pos
         if edit_pos == 2:
             return self.edit_text, 1
@@ -233,7 +235,7 @@ class DayEdit(DatetimeIntEdit):
         self.dp: DatetimePicker = dp
         super().__init__(2, default)
 
-    def insert_text_result(self, text: str) -> tuple[str, int]:
+    def insert_text_result(self, text: str | bytes) -> Tuple[str, int]:
         if self.edit_pos == 2:
             return self.edit_text, 1
         length: int = len(text)
@@ -266,7 +268,7 @@ class HourEdit(DatetimeIntEdit):
     def __init__(self, default: int) -> None:
         super().__init__(2, default)
 
-    def insert_text_result(self, text: str) -> tuple[str, int]:
+    def insert_text_result(self, text: str | bytes) -> Tuple[str, int]:
         if self.edit_pos == 2:
             return self.edit_text, 1
         length: int = len(text)
@@ -295,7 +297,7 @@ class MinuteEdit(DatetimeIntEdit):
     def __init__(self, default: int) -> None:
         super().__init__(2, default)
 
-    def insert_text_result(self, text: str) -> tuple[str, int]:
+    def insert_text_result(self, text: str | bytes) -> Tuple[str, int]:
         if self.edit_pos == 2:
             return self.edit_text, 1
         length: int = len(text)
@@ -320,20 +322,16 @@ class MinuteEdit(DatetimeIntEdit):
         return f"{new_value:02}", edit_pos + length
 
 
-class ActiveTZPicker(urwid.ListBox):  # type: ignore
-    def __init__(self, foreign_clocks: list[str], dp: DatetimePicker) -> None:
+class ActiveTZPicker(TZPickerBase):
+    def __init__(self, foreign_clocks: List[str], dp: DatetimePicker) -> None:
         self.dp: DatetimePicker = dp
-        new_items: list[urwid.AttrMap[urwid.Text]] = [self.wrap_label("local")] + [
+        new_items: List[urwid.AttrMap] = [self.wrap_label("local")] + [
             self.wrap_label(tz) for tz in foreign_clocks
         ]
-        self.list_walker: urwid.SimpleFocusListWalker[
-            urwid.attrMap[urwid.Text]
-        ] = urwid.SimpleFocusListWalker(new_items, wrap_around=True)
+        self.list_walker: urwid.SimpleFocusListWalker = urwid.SimpleFocusListWalker(
+            new_items, wrap_around=True
+        )
         super().__init__(self.list_walker)
-
-    def update_tz_labels(self, foreign_clocks: list[str]) -> None:
-        for i in range(len(foreign_clocks)):
-            self.list_walker[i + 1].base_widget.set_text(foreign_clocks[i])
 
     def wrap_label(self, label: str) -> urwid.AttrMap:
         return urwid.AttrMap(urwid.Text(label), None, "focus")
@@ -342,30 +340,89 @@ class ActiveTZPicker(urwid.ListBox):  # type: ignore
         self.list_walker.append(self.wrap_label(label))
 
     def remove(self, label: str) -> None:
-        current_labels: list[str] = [am.base_widget.text for am in self.list_walker]
+        current_labels: List[str] = [am.base_widget.text for am in self.list_walker]
         self.list_walker.pop(current_labels.index(label))
 
     def get_tz(self) -> Optional[tzinfo]:
+        focus_item: Optional[urwid.Widget]
+        focus_index: Optional[int]
         focus_item, focus_index = self.list_walker.get_focus()
-        if not focus_index:
+        if (
+            focus_index
+            and isinstance(focus_item, urwid.AttrMap)
+            and isinstance(focus_item.base_widget, urwid.Text)
+        ):
+            return ZoneInfo(focus_item.base_widget.text)
+        else:
             return None
-        return ZoneInfo(focus_item.base_widget.text)
 
-    def change_focus(self, *args: list[Any], **kwargs: dict[str, Any]) -> None:
-        super().change_focus(*args, **kwargs)
+    def change_focus(
+        self,
+        size: Tuple[int, int],
+        position: int,
+        offset_inset: int = 0,
+        coming_from: Literal["above", "below"] | None = None,
+        cursor_coords: Tuple[int, int] | None = None,
+        snap_rows: int | None = None,
+    ) -> None:
+        super().change_focus(
+            size,
+            position,
+            offset_inset=offset_inset,
+            coming_from=coming_from,
+            cursor_coords=cursor_coords,
+            snap_rows=snap_rows,
+        )
         urwid.emit_signal(self, "postchange")
 
-    signals: list[str] = ["postchange"]
+    signals: List[str] = ["postchange"]
+
+
+class MainLoop(urwid.MainLoop):
+    def __init__(
+        self,
+        widget: urwid.Widget,
+        palette: Set[Tuple[Any, ...]] = set(),
+        screen: urwid.BaseScreen | None = None,
+        handle_mouse: bool = True,
+        input_filter: Callable[[List[str], List[int]], List[str]] | None = None,
+        unhandled_input: Callable[[str | Tuple[str, int, int, int]], bool]
+        | None = None,
+        event_loop: urwid.EventLoop | None = None,
+        pop_ups: bool = False,
+        update_fn: Callable[[], Any] = lambda: None,
+        refresh_rate: float = 10.0,
+    ) -> None:
+        self.update_fn: Callable[[], Any] = update_fn
+        self.tick_secs: float = 1.0 / refresh_rate
+        super().__init__(
+            widget,
+            palette=palette,
+            screen=screen,
+            handle_mouse=handle_mouse,
+            input_filter=input_filter,
+            unhandled_input=unhandled_input,
+            event_loop=event_loop,
+            pop_ups=pop_ups,
+        )
+
+    def start(self) -> None:
+        self.tick(self, None)
+        super().start()
+
+    def tick(self, loop: urwid.MainLoop, user_data: Any | None) -> None:
+        self.update_fn()
+        self.set_alarm_in(self.tick_secs, self.tick)
 
 
 class App:
     def __init__(self) -> None:
         self.current: bool = True
-        self.foreign_clocks: list[str] = self.load_clock_list()
+        self.foreign_clocks: List[str] = self.load_clock_list()
         self.grid_flow: urwid.GridFlow = urwid.GridFlow(
             [urwid.Text(" ")], 1, 0, 0, "left"
         )
-        self.clocks: list[ClockWidget] = [
+        self.clocks: List[ClockWidget] = [
             ClockWidget(font=urwid.Thin6x6Font(), precision="seconds")
         ]
         self.fill_clock_grid(rebuild_clocks=True)
@@ -375,7 +432,7 @@ class App:
 
         def cb_postchange(
             cb: urwid.CheckBox, old_state: bool
-        ) -> Optional[tuple[urwid.CheckBox, bool]]:
+        ) -> Optional[Tuple[urwid.CheckBox, bool]]:
             if old_state:
                 self.foreign_clocks.remove(cb.label)
                 self.dp.tz.remove(cb.label)
@@ -386,7 +443,7 @@ class App:
             self.fill_clock_grid(rebuild_clocks=True)
             return None
 
-        tz_checklist: list[urwid.CheckBox] = [
+        tz_checklist: List[urwid.CheckBox] = [
             urwid.CheckBox(tz, state=(tz in self.foreign_clocks))
             for tz in sorted(available_timezones())
         ]
@@ -396,7 +453,7 @@ class App:
             tz_checklist, wrap_around=True
         )
         list_box: urwid.ListBox = urwid.ListBox(list_walker)
-        time_options: list[urwid.RadioButton] = []
+        time_options: List[urwid.RadioButton] = []
         current_button = urwid.RadioButton(
             time_options,
             "Current time",
@@ -414,8 +471,7 @@ class App:
         columns: urwid.Columns = urwid.Columns(
             [(local_clock_width, left_pile), right_pile]
         )
-        event_loop = EventLoop(self.update_clocks_if_current, 10)
-        palette = {
+        palette: Set[Tuple[Any, ...]] = {
             (
                 "focus",
                 "default,standout",
@@ -425,16 +481,28 @@ class App:
                 "default",
             )
         }
-        self.main_loop: urwid.MainLoop = urwid.MainLoop(
+        screen: urwid.BaseScreen = (
+            urwid.curses_display.Screen()
+            if CURSES_AVAILABLE
+            else urwid.raw_display.Screen()
+        )
+        self.main_loop: urwid.MainLoop = MainLoop(
             columns,
-            event_loop=event_loop,
             unhandled_input=self.handle_input,
             palette=palette,
+            screen=screen,
+            update_fn=self.update_clocks_if_current,
+            refresh_rate=10.0,
         )
 
     def construct_datetime_editor(
         self, dt: datetime, button: urwid.RadioButton
     ) -> urwid.Columns:
+        year: int
+        month: int
+        day: int
+        hour: int
+        mins: int
         year, month, day, hour, mins = dt.timetuple()[:5]
         self.dp: DatetimePicker = DatetimePicker()
         self.dp.year = YearEdit(year, self.dp)
@@ -444,7 +512,7 @@ class App:
         self.dp.mins = MinuteEdit(mins)
         self.dp.tz = ActiveTZPicker(self.foreign_clocks, self.dp)
         self._new_tz_picker: bool = False
-        widgets: list[tuple[int, urwid.Widget]] = [
+        widgets: List[Tuple[int, urwid.Widget] | urwid.Widget] = [
             (len(button.label) + 5, button),
             (4, self.dp.year),
             (1, urwid.Text("-")),
@@ -474,14 +542,20 @@ class App:
             self.clocks = self.clocks[:1] + [
                 ClockWidget(tzkey) for tzkey in self.foreign_clocks
             ]
-        self.grid_flow.contents = [
+        new_contents: List[
+            Tuple[urwid.Widget, Tuple[Literal[urwid.WHSettings.GIVEN], int]]
+        ] = [
             (c, self.grid_flow.options(width_amount=c.pack(None)[0]))
             for c in self.clocks[1:]
-        ] or [(urwid.Text(" "), self.grid_flow.options())]
+        ] or [
+            (urwid.Text(" "), self.grid_flow.options())
+        ]
+        self.grid_flow.contents = new_contents
 
-    def handle_input(self, key: str) -> None:
+    def handle_input(self, key: str | Tuple[str, int, int, int]) -> bool:
         if key in {"q", "Q", "ctrl q", "esc"}:
             raise urwid.ExitMainLoop()
+        return False
 
     def update_clocks(self) -> None:
         title_change: bool = False
@@ -504,7 +578,7 @@ class App:
             self.fill_clock_grid()
 
     def update_clocks_on_signal(
-        self, *args: list[Any], **kwargs: dict[str, Any]
+        self, *args: List[Any], **kwargs: dict[str, Any]
     ) -> None:
         self.custom_button.set_state(True)
         self.update_clocks()
@@ -525,11 +599,11 @@ class App:
             pass
         return config_dir / "config.json"
 
-    def load_clock_list(self) -> list[str]:
+    def load_clock_list(self) -> List[str]:
         config_path: Path = self.get_config_path()
         try:
             with open(config_path, "r") as f:
-                clocks: list[str] = json.load(f)["clocks"]
+                clocks: List[str] = json.load(f)["clocks"]
             assert isinstance(clocks, list)
             assert all(isinstance(i, str) for i in clocks)
         except Exception:
@@ -541,7 +615,7 @@ class App:
             except Exception:
                 return None
 
-        valid_clocks: list[str] = [tzkey for tzkey in clocks if load_zone(tzkey)]
+        valid_clocks: List[str] = [tzkey for tzkey in clocks if load_zone(tzkey)]
         return valid_clocks
 
     def write_clock_list(self) -> None:

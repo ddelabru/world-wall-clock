@@ -1,3 +1,3 @@
 #!/usr/bin/env python3
 
-VERSION: str = "0.1.2"
+VERSION: str = "0.1.3"
