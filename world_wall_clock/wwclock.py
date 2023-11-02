@@ -36,8 +36,6 @@ try:
 
     CURSES_AVAILABLE = True
 except ImportError:
-    import urwid.raw_display
-
     CURSES_AVAILABLE = False
 
 
