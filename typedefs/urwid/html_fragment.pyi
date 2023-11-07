@@ -1,4 +1,5 @@
 import typing
+
 from typing_extensions import Literal
 from urwid import util as util
 from urwid.display_common import AttrSpec as AttrSpec, BaseScreen as BaseScreen

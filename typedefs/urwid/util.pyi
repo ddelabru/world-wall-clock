@@ -1,6 +1,7 @@
 # mypy: ignore-errors
 
 import typing
+
 from _typeshed import Incomplete
 from typing_extensions import Self
 from urwid import escape as escape

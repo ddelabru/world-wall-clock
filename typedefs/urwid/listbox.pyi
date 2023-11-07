@@ -1,8 +1,9 @@
 # mypy: ignore-errors
 
 import typing
-from _typeshed import Incomplete
 from collections.abc import Generator, Iterable
+
+from _typeshed import Incomplete
 from typing_extensions import Literal
 from urwid import signals as signals
 from urwid.canvas import (

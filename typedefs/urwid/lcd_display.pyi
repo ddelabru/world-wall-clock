@@ -1,8 +1,10 @@
 import typing
-from .display_common import BaseScreen as BaseScreen
-from _typeshed import Incomplete
 from collections.abc import Iterable, Sequence
+
+from _typeshed import Incomplete
 from typing_extensions import Literal
+
+from .display_common import BaseScreen as BaseScreen
 
 class LCDScreen(BaseScreen):
     def set_terminal_properties(

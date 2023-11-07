@@ -1,8 +1,9 @@
 # mypy: ignore-errors
 
 import typing
-from _typeshed import Incomplete
 from collections.abc import Callable as Callable, Iterable, Mapping, Sequence
+
+from _typeshed import Incomplete
 from typing_extensions import Literal
 from urwid import event_loop as event_loop, util as util
 from urwid.canvas import Canvas as Canvas

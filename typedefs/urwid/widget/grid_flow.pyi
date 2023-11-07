@@ -1,5 +1,14 @@
 # mypy: ignore-errors
 
+from collections.abc import Iterable
+
+from _typeshed import Incomplete
+from typing_extensions import Literal
+from urwid.monitored_list import (
+    MonitoredFocusList as MonitoredFocusList,
+    MonitoredList as MonitoredList,
+)
+
 from .columns import Columns as Columns
 from .constants import Align as Align, Sizing as Sizing, WHSettings as WHSettings
 from .container import (
@@ -10,13 +19,6 @@ from .divider import Divider as Divider
 from .padding import Padding as Padding
 from .pile import Pile as Pile
 from .widget import Widget as Widget, WidgetWrap as WidgetWrap
-from _typeshed import Incomplete
-from collections.abc import Iterable
-from typing_extensions import Literal
-from urwid.monitored_list import (
-    MonitoredFocusList as MonitoredFocusList,
-    MonitoredList as MonitoredList,
-)
 
 class GridFlowError(Exception): ...
 

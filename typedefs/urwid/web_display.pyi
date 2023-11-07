@@ -1,4 +1,5 @@
 import typing
+
 from _typeshed import Incomplete
 from typing_extensions import Literal
 from urwid import util as util

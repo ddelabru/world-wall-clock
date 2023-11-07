@@ -1,7 +1,5 @@
 # mypy: ignore-errors
 
-from .constants import Align as Align, Sizing as Sizing, WrapMode as WrapMode
-from .widget import Widget as Widget
 from _typeshed import Incomplete
 from typing_extensions import Literal
 from urwid import text_layout as text_layout
@@ -14,6 +12,9 @@ from urwid.util import (
     calc_width as calc_width,
     decompose_tagmarkup as decompose_tagmarkup,
 )
+
+from .constants import Align as Align, Sizing as Sizing, WrapMode as WrapMode
+from .widget import Widget as Widget
 
 class TextError(Exception): ...
 

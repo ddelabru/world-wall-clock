@@ -1,13 +1,15 @@
 # mypy: ignore-errors
 
 import typing
+
+from _typeshed import Incomplete
+from typing_extensions import Literal
+from urwid.canvas import CompositeCanvas as CompositeCanvas
+
 from .widget import (
     Widget as Widget,
     delegate_to_widget_mixin as delegate_to_widget_mixin,
 )
-from _typeshed import Incomplete
-from typing_extensions import Literal
-from urwid.canvas import CompositeCanvas as CompositeCanvas
 
 class WidgetDecoration(Widget):
     def __init__(self, original_widget: Widget) -> None: ...

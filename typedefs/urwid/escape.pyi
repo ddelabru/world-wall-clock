@@ -1,7 +1,8 @@
 # mypy: ignore-errors
 
-from _typeshed import Incomplete
 from collections.abc import Sequence
+
+from _typeshed import Incomplete
 from urwid import old_str_util as str_util
 
 within_double_byte: Incomplete

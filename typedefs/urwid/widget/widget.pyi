@@ -1,13 +1,15 @@
 # mypy: ignore-errors
 
-from .constants import Sizing as Sizing
-from _typeshed import Incomplete
 from collections.abc import Callable as Callable
+
+from _typeshed import Incomplete
 from urwid import signals as signals
 from urwid.canvas import CanvasCache as CanvasCache, CompositeCanvas as CompositeCanvas
 from urwid.command_map import command_map as command_map
 from urwid.split_repr import split_repr as split_repr
 from urwid.util import MetaSuper as MetaSuper
+
+from .constants import Sizing as Sizing
 
 class WidgetMeta(MetaSuper, signals.MetaSignals):
     def __init__(cls, name, bases, d) -> None: ...

@@ -1,8 +1,9 @@
 # mypy: ignore-errors
 
 import typing
-from _typeshed import Incomplete
 from collections.abc import Iterable
+
+from _typeshed import Incomplete
 from typing_extensions import Literal, Self
 from urwid import signals as signals
 from urwid.util import StoppingContext as StoppingContext, int_scale as int_scale

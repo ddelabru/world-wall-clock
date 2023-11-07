@@ -1,8 +1,10 @@
-import trio
 import typing
-from .abstract_loop import EventLoop
-from _typeshed import Incomplete
 from collections.abc import Callable
+
+import trio
+from _typeshed import Incomplete
+
+from .abstract_loop import EventLoop
 
 class _TrioIdleCallbackInstrument(trio.abc.Instrument):
     idle_callbacks: Incomplete

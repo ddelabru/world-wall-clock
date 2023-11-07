@@ -1,8 +1,7 @@
 # mypy: ignore-errors
 
 import typing
-from .constants import Align as Align, WrapMode as WrapMode
-from .text import Text as Text, TextError as TextError
+
 from _typeshed import Incomplete
 from typing_extensions import Literal
 from urwid import text_layout as text_layout
@@ -15,6 +14,9 @@ from urwid.util import (
     move_next_char as move_next_char,
     move_prev_char as move_prev_char,
 )
+
+from .constants import Align as Align, WrapMode as WrapMode
+from .text import Text as Text, TextError as TextError
 
 class EditError(TextError): ...
 

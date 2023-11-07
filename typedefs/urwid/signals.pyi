@@ -1,8 +1,9 @@
 # mypy: ignore-errors
 
 import typing
-from _typeshed import Incomplete
 from collections.abc import Callable as Callable, Container, Iterable
+
+from _typeshed import Incomplete
 
 class MetaSignals(type):
     def __init__(

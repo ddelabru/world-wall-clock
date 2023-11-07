@@ -1,9 +1,11 @@
 import typing
-from .abstract_loop import EventLoop
-from _typeshed import Incomplete
 from collections.abc import Callable
+
+from _typeshed import Incomplete
 from twisted.internet.abstract import FileDescriptor
 from twisted.internet.interfaces import IReactorFDSet
+
+from .abstract_loop import EventLoop
 
 class _TwistedInputDescriptor(FileDescriptor):
     cb: Incomplete

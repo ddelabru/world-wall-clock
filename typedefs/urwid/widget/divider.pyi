@@ -1,9 +1,10 @@
 # mypy: ignore-errors
 
-from .constants import Sizing as Sizing
-from .widget import Widget as Widget
 from _typeshed import Incomplete
 from urwid.canvas import CompositeCanvas as CompositeCanvas, SolidCanvas as SolidCanvas
+
+from .constants import Sizing as Sizing
+from .widget import Widget as Widget
 
 class Divider(Widget):
     ignore_focus: bool

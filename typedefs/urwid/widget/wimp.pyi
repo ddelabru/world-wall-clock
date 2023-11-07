@@ -1,18 +1,20 @@
 # mypy: ignore-errors
 
 import typing
-from .columns import Columns as Columns
-from .constants import Align as Align, Sizing as Sizing, WrapMode as WrapMode
-from .text import Text as Text
-from .widget import WidgetWrap as WidgetWrap
-from _typeshed import Incomplete
 from collections.abc import Callable as Callable, MutableSequence
+
+from _typeshed import Incomplete
 from typing_extensions import Literal, Self
 from urwid.canvas import CompositeCanvas as CompositeCanvas, TextCanvas as TextCanvas
 from urwid.command_map import Command as Command
 from urwid.signals import connect_signal as connect_signal
 from urwid.text_layout import TextLayout as TextLayout, calc_coords as calc_coords
 from urwid.util import is_mouse_press as is_mouse_press
+
+from .columns import Columns as Columns
+from .constants import Align as Align, Sizing as Sizing, WrapMode as WrapMode
+from .text import Text as Text
+from .widget import WidgetWrap as WidgetWrap
 
 class SelectableIcon(Text):
     ignore_focus: bool

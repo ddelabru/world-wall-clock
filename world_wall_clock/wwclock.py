@@ -16,19 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from . import VERSION
-
 import abc
+import json
 from argparse import ArgumentParser, Namespace
 from collections.abc import Callable
 from datetime import date, datetime, timezone, tzinfo
-import json
 from pathlib import Path
 from typing import Any, List, Literal, Optional, Set, Tuple
-from zoneinfo import available_timezones, ZoneInfo
+from zoneinfo import ZoneInfo, available_timezones
 
 import urwid
 from xdg_base_dirs import xdg_config_home
+
+from . import VERSION
 
 CURSES_AVAILABLE: bool
 try:

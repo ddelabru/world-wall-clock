@@ -1,7 +1,5 @@
 # mypy: ignore-errors
 
-from .constants import Sizing as Sizing
-from .widget import Widget as Widget, fixed_size as fixed_size
 from _typeshed import Incomplete
 from urwid import Font as Font
 from urwid.canvas import (
@@ -10,6 +8,9 @@ from urwid.canvas import (
     TextCanvas as TextCanvas,
 )
 from urwid.util import decompose_tagmarkup as decompose_tagmarkup
+
+from .constants import Sizing as Sizing
+from .widget import Widget as Widget, fixed_size as fixed_size
 
 class BigText(Widget):
     def __init__(self, markup, font: Font) -> None: ...

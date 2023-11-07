@@ -1,14 +1,16 @@
 # mypy: ignore-errors
 
+from collections.abc import Hashable
+
+from _typeshed import Incomplete
+from urwid.canvas import CompositeCanvas as CompositeCanvas
+
 from .widget import (
     Widget as Widget,
     WidgetError as WidgetError,
     delegate_to_widget_mixin as delegate_to_widget_mixin,
 )
 from .widget_decoration import WidgetDecoration as WidgetDecoration
-from _typeshed import Incomplete
-from collections.abc import Hashable
-from urwid.canvas import CompositeCanvas as CompositeCanvas
 
 class AttrMapError(WidgetError): ...
 

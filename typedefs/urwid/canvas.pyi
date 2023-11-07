@@ -1,9 +1,9 @@
 # mypy: ignore-errors
 
 import typing
-from .widget import Widget as Widget
-from _typeshed import Incomplete
 from collections.abc import Generator, Sequence
+
+from _typeshed import Incomplete
 from urwid.text_layout import LayoutSegment as LayoutSegment, trim_line as trim_line
 from urwid.util import (
     apply_target_encoding as apply_target_encoding,
@@ -15,6 +15,8 @@ from urwid.util import (
     rle_product as rle_product,
     trim_text_attr_cs as trim_text_attr_cs,
 )
+
+from .widget import Widget as Widget
 
 class CanvasCache:
     hits: int

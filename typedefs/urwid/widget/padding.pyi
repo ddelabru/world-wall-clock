@@ -1,8 +1,14 @@
 # mypy: ignore-errors
 
+from _typeshed import Incomplete
+from typing_extensions import Literal
+from urwid.canvas import CompositeCanvas as CompositeCanvas, SolidCanvas as SolidCanvas
+from urwid.split_repr import remove_defaults as remove_defaults
+from urwid.util import int_scale as int_scale
+
 from .constants import (
-    Align as Align,
     RELATIVE_100 as RELATIVE_100,
+    Align as Align,
     Sizing as Sizing,
     WHSettings as WHSettings,
     WrapMode as WrapMode,
@@ -13,11 +19,6 @@ from .constants import (
 )
 from .widget import Widget as Widget
 from .widget_decoration import WidgetDecoration as WidgetDecoration
-from _typeshed import Incomplete
-from typing_extensions import Literal
-from urwid.canvas import CompositeCanvas as CompositeCanvas, SolidCanvas as SolidCanvas
-from urwid.split_repr import remove_defaults as remove_defaults
-from urwid.util import int_scale as int_scale
 
 class PaddingError(Exception): ...
 

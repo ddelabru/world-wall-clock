@@ -1,5 +1,8 @@
 # mypy: ignore-errors
 
+from _typeshed import Incomplete
+from typing_extensions import Literal
+
 from .columns import Columns as Columns
 from .constants import Align as Align, Sizing as Sizing
 from .divider import Divider as Divider
@@ -8,8 +11,6 @@ from .solid_fill import SolidFill as SolidFill
 from .text import Text as Text
 from .widget import Widget as Widget, WidgetWrap as WidgetWrap
 from .widget_decoration import WidgetDecoration as WidgetDecoration
-from _typeshed import Incomplete
-from typing_extensions import Literal
 
 class LineBox(WidgetDecoration, WidgetWrap):
     title_widget: Incomplete

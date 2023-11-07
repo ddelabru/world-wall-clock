@@ -10,14 +10,22 @@ graphical clock in a terminal environment.
 You can install world-wall-clock with the Python packaging tool
 [pip](https://pip.pypa.io/en/stable/). It is recommended to do so in a
 [virtual environment](https://docs.python.org/3/library/venv.html).
+Alternatively, you can use [pipx](https://pypa.github.io/pipx/) as a wrapper
+around pip that will handle setting up a virtual environment for you.
 
-### From PyPI
+### From PyPI, using pipx
+
+```sh
+pipx install world-wall-clock
+```
+
+### From PyPI, using pip in a virtual enviornment
 
 ```sh
 python -m pip install world-wall-clock
 ```
 
-### From the top level of the source repo
+### From the top level of the source repo, using pip in a virtual environment
 
 ```sh
 python -m pip install .
@@ -87,10 +95,11 @@ poetry run wwclock
 ```
 
 The `poetry run` command will also allow you to run the suite of chosen dev
-tools for static type-checking, code formatting, and linting:
+tools for static type-checking, import sorting, code formatting, and linting:
 
 ```sh
 poetry run mypy --strict
+poetry run isort .
 poetry run black .
 poetry run flake8
 ```

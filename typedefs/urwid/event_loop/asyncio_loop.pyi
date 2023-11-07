@@ -2,8 +2,9 @@
 
 import asyncio
 import typing
-from .abstract_loop import EventLoop
 from collections.abc import Callable
+
+from .abstract_loop import EventLoop
 
 class AsyncioEventLoop(EventLoop):
     def __init__(

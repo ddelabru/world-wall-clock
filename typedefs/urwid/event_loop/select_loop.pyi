@@ -1,6 +1,7 @@
 import typing
-from .abstract_loop import EventLoop
 from collections.abc import Callable
+
+from .abstract_loop import EventLoop
 
 class SelectEventLoop(EventLoop):
     def __init__(self) -> None: ...

@@ -1,7 +1,9 @@
 import typing
-import zmq
-from .abstract_loop import EventLoop as EventLoop, ExitMainLoop as ExitMainLoop
 from collections.abc import Callable as Callable
+
+import zmq
+
+from .abstract_loop import EventLoop as EventLoop, ExitMainLoop as ExitMainLoop
 
 ZMQAlarmHandle = typing.TypeVar("ZMQAlarmHandle")
 ZMQQueueHandle = typing.TypeVar("ZMQQueueHandle")

@@ -1,6 +1,7 @@
-from _typeshed import Incomplete
 from collections.abc import Container
 from decimal import Decimal
+
+from _typeshed import Incomplete
 from urwid import Edit as Edit
 
 class NumEdit(Edit):

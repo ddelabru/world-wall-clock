@@ -1,16 +1,17 @@
 # mypy: ignore-errors
 
 import typing
+
 from _typeshed import Incomplete
 from typing_extensions import Literal
 from urwid import escape as escape, signals as signals, util as util
 from urwid.display_common import (
-    AttrSpec as AttrSpec,
-    BaseScreen as BaseScreen,
     INPUT_DESCRIPTORS_CHANGED as INPUT_DESCRIPTORS_CHANGED,
-    RealTerminal as RealTerminal,
     UNPRINTABLE_TRANS_TABLE as UNPRINTABLE_TRANS_TABLE,
     UPDATE_PALETTE_ENTRY as UPDATE_PALETTE_ENTRY,
+    AttrSpec as AttrSpec,
+    BaseScreen as BaseScreen,
+    RealTerminal as RealTerminal,
 )
 
 class Screen(BaseScreen, RealTerminal):

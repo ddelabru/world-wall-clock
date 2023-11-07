@@ -1,8 +1,15 @@
 # mypy: ignore-errors
 
+from _typeshed import Incomplete
+from typing_extensions import Literal
+from urwid.canvas import (
+    CanvasOverlay as CanvasOverlay,
+    CompositeCanvas as CompositeCanvas,
+)
+
 from .constants import (
-    Align as Align,
     RELATIVE_100 as RELATIVE_100,
+    Align as Align,
     Sizing as Sizing,
     VAlign as VAlign,
     WHSettings as WHSettings,
@@ -23,12 +30,6 @@ from .container import (
 from .filler import calculate_top_bottom_filler as calculate_top_bottom_filler
 from .padding import calculate_left_right_padding as calculate_left_right_padding
 from .widget import Widget as Widget
-from _typeshed import Incomplete
-from typing_extensions import Literal
-from urwid.canvas import (
-    CanvasOverlay as CanvasOverlay,
-    CompositeCanvas as CompositeCanvas,
-)
 
 class OverlayError(Exception): ...
 

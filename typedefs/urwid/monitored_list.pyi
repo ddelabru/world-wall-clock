@@ -1,8 +1,9 @@
 # mypy: ignore-errors
 
 import typing
-from _typeshed import Incomplete
 from collections.abc import Callable as Callable
+
+from _typeshed import Incomplete
 from typing_extensions import ParamSpec
 
 ArgSpec = ParamSpec("ArgSpec")

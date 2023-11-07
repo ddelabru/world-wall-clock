@@ -2,8 +2,9 @@
 
 import enum
 import typing
-from _typeshed import Incomplete
 from typing import Iterator
+
+from _typeshed import Incomplete
 from typing_extensions import Self
 
 class Command(str, enum.Enum):

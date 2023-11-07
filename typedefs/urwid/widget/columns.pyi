@@ -1,13 +1,8 @@
 # mypy: ignore-errors
 
-from .constants import Align as Align, Sizing as Sizing, WHSettings as WHSettings
-from .container import (
-    WidgetContainerListContentsMixin as WidgetContainerListContentsMixin,
-    WidgetContainerMixin as WidgetContainerMixin,
-)
-from .widget import Widget as Widget
-from _typeshed import Incomplete
 from collections.abc import Iterable
+
+from _typeshed import Incomplete
 from typing_extensions import Literal
 from urwid.canvas import (
     CanvasJoin as CanvasJoin,
@@ -19,6 +14,13 @@ from urwid.monitored_list import (
     MonitoredList as MonitoredList,
 )
 from urwid.util import is_mouse_press as is_mouse_press
+
+from .constants import Align as Align, Sizing as Sizing, WHSettings as WHSettings
+from .container import (
+    WidgetContainerListContentsMixin as WidgetContainerListContentsMixin,
+    WidgetContainerMixin as WidgetContainerMixin,
+)
+from .widget import Widget as Widget
 
 class ColumnsError(Exception): ...
 
