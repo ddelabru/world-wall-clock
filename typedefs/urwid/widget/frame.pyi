@@ -2,17 +2,19 @@
 
 import abc
 import typing
-from .constants import Sizing as Sizing
-from .filler import Filler as Filler
-from .widget import Widget as Widget
-from _typeshed import Incomplete
 from collections.abc import Generator, Iterator
+
+from _typeshed import Incomplete
 from typing_extensions import Literal
 from urwid.canvas import (
     CanvasCombine as CanvasCombine,
     CompositeCanvas as CompositeCanvas,
 )
 from urwid.util import is_mouse_press as is_mouse_press
+
+from .constants import Sizing as Sizing
+from .filler import Filler as Filler
+from .widget import Widget as Widget
 
 class WidgetContainerMixin(metaclass=abc.ABCMeta):
     def __getitem__(self, position) -> Widget: ...

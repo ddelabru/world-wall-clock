@@ -1,5 +1,11 @@
 # mypy: ignore-errors
 
+from _typeshed import Incomplete
+from typing_extensions import Literal
+from urwid.canvas import CompositeCanvas as CompositeCanvas
+from urwid.split_repr import remove_defaults as remove_defaults
+from urwid.util import int_scale as int_scale
+
 from .constants import (
     RELATIVE_100 as RELATIVE_100,
     Sizing as Sizing,
@@ -12,11 +18,6 @@ from .constants import (
 )
 from .widget import Widget as Widget
 from .widget_decoration import WidgetDecoration as WidgetDecoration
-from _typeshed import Incomplete
-from typing_extensions import Literal
-from urwid.canvas import CompositeCanvas as CompositeCanvas
-from urwid.split_repr import remove_defaults as remove_defaults
-from urwid.util import int_scale as int_scale
 
 class FillerError(Exception): ...
 
@@ -27,9 +28,11 @@ class Filler(WidgetDecoration):
     def __init__(
         self,
         body: Widget,
-        valign: Literal["top", "middle", "bottom"]
-        | VAlign
-        | tuple[Literal["relative", WHSettings.RELATIVE], int] = ...,
+        valign: (
+            Literal["top", "middle", "bottom"]
+            | VAlign
+            | tuple[Literal["relative", WHSettings.RELATIVE], int]
+        ) = ...,
         height: int | Literal["pack"] | tuple[Literal["relative"], int] | None = ...,
         min_height: int | None = ...,
         top: int = ...,
@@ -56,8 +59,9 @@ class Filler(WidgetDecoration):
 
 def calculate_top_bottom_filler(
     maxrow: int,
-    valign_type: Literal["top", "middle", "bottom", "relative", WHSettings.RELATIVE]
-    | VAlign,
+    valign_type: (
+        Literal["top", "middle", "bottom", "relative", WHSettings.RELATIVE] | VAlign
+    ),
     valign_amount: int,
     height_type: Literal[
         "given",

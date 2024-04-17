@@ -1,8 +1,9 @@
 # mypy: ignore-errors
 
 import typing
-from _typeshed import Incomplete
 from collections.abc import Generator, Iterable
+
+from _typeshed import Incomplete
 from typing_extensions import Literal
 from urwid import signals as signals
 from urwid.canvas import (
@@ -85,8 +86,10 @@ class ListBox(Widget, WidgetContainerMixin):
     def get_cursor_coords(self, size: tuple[int, int]) -> tuple[int, int] | None: ...
     def set_focus_valign(
         self,
-        valign: Literal["top", "middle", "bottom"]
-        | tuple[Literal["fixed top", "fixed bottom", "relative"], int],
+        valign: (
+            Literal["top", "middle", "bottom"]
+            | tuple[Literal["fixed top", "fixed bottom", "relative"], int]
+        ),
     ): ...
     def set_focus(
         self, position, coming_from: Literal["above", "below"] | None = ...

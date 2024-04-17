@@ -23,16 +23,23 @@ jobs:
         pip install poetry
     - name: Install dependencies
       run: |
+        apk add git
         poetry install
     - name: Check types with mypy
       run: |
         poetry run mypy --strict
+    - name: Check import statement sorting with isort
+      run: |
+        poetry run isort --check .
     - name: Check Black style
       run: |
         poetry run black --check --diff .
     - name: Lint with flake8
       run: |
         poetry run flake8
+    - name: Run unit tests
+      run: |
+        poetry run pytest --cov=world_wall_clock/ tests/* 
     - name: Confirm that app runs
       run: |
         poetry run wwclock --version

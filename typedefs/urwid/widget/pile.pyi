@@ -1,12 +1,7 @@
 # mypy: ignore-errors
 
-from .constants import Sizing as Sizing, WHSettings as WHSettings
-from .container import (
-    WidgetContainerListContentsMixin as WidgetContainerListContentsMixin,
-    WidgetContainerMixin as WidgetContainerMixin,
-)
-from .widget import Widget as Widget
 from collections.abc import Iterable
+
 from typing_extensions import Literal
 from urwid.canvas import (
     CanvasCombine as CanvasCombine,
@@ -18,6 +13,13 @@ from urwid.monitored_list import (
     MonitoredList as MonitoredList,
 )
 from urwid.util import is_mouse_press as is_mouse_press
+
+from .constants import Sizing as Sizing, WHSettings as WHSettings
+from .container import (
+    WidgetContainerListContentsMixin as WidgetContainerListContentsMixin,
+    WidgetContainerMixin as WidgetContainerMixin,
+)
+from .widget import Widget as Widget
 
 class PileError(Exception): ...
 

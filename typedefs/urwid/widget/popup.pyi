@@ -1,5 +1,8 @@
 # mypy: ignore-errors
 
+from _typeshed import Incomplete
+from urwid.canvas import Canvas as Canvas, CompositeCanvas as CompositeCanvas
+
 from .constants import Sizing as Sizing
 from .overlay import Overlay as Overlay
 from .widget import (
@@ -7,8 +10,6 @@ from .widget import (
     delegate_to_widget_mixin as delegate_to_widget_mixin,
 )
 from .widget_decoration import WidgetDecoration as WidgetDecoration
-from _typeshed import Incomplete
-from urwid.canvas import Canvas as Canvas, CompositeCanvas as CompositeCanvas
 
 class PopUpLauncher(Incomplete, WidgetDecoration):
     def __init__(self, original_widget: Widget) -> None: ...

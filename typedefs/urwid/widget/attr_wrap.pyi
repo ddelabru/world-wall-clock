@@ -1,8 +1,9 @@
 # mypy: ignore-errors
 
+from _typeshed import Incomplete
+
 from .attr_map import AttrMap as AttrMap
 from .widget import Widget as Widget
-from _typeshed import Incomplete
 
 class AttrWrap(AttrMap):
     def __init__(

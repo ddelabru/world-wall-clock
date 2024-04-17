@@ -1,11 +1,13 @@
 # mypy: ignore-errors
 
 import typing
+
+from _typeshed import Incomplete
+from urwid.canvas import CompositeCanvas as CompositeCanvas
+
 from .constants import Sizing as Sizing
 from .widget import Widget as Widget
 from .widget_decoration import WidgetDecoration as WidgetDecoration
-from _typeshed import Incomplete
-from urwid.canvas import CompositeCanvas as CompositeCanvas
 
 class BoxAdapterError(Exception): ...
 

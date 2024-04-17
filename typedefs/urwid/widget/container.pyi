@@ -2,8 +2,9 @@
 
 import abc
 import typing
-from .widget import Widget as Widget
 from collections.abc import Iterator
+
+from .widget import Widget as Widget
 
 class WidgetContainerMixin(metaclass=abc.ABCMeta):
     def __getitem__(self, position) -> Widget: ...

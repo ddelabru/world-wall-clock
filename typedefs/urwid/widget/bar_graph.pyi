@@ -1,13 +1,5 @@
 # mypy: ignore-errors
 
-from .constants import Sizing as Sizing
-from .text import Text as Text
-from .widget import (
-    Widget as Widget,
-    WidgetMeta as WidgetMeta,
-    nocache_widget_render as nocache_widget_render,
-    nocache_widget_render_instance as nocache_widget_render_instance,
-)
 from _typeshed import Incomplete
 from typing_extensions import Literal
 from urwid.canvas import (
@@ -16,6 +8,15 @@ from urwid.canvas import (
     SolidCanvas as SolidCanvas,
 )
 from urwid.util import get_encoding_mode as get_encoding_mode
+
+from .constants import Sizing as Sizing
+from .text import Text as Text
+from .widget import (
+    Widget as Widget,
+    WidgetMeta as WidgetMeta,
+    nocache_widget_render as nocache_widget_render,
+    nocache_widget_render_instance as nocache_widget_render_instance,
+)
 
 class BarGraphMeta(WidgetMeta):
     def __init__(cls, name, bases, d) -> None: ...

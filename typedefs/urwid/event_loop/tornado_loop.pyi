@@ -1,8 +1,10 @@
 import typing
-from .abstract_loop import EventLoop
 from collections.abc import Callable
+
 from tornado import ioloop
 from typing_extensions import Literal
+
+from .abstract_loop import EventLoop
 
 class TornadoEventLoop(EventLoop):
     def __init__(self, loop: ioloop.IOLoop | None = ...) -> None: ...

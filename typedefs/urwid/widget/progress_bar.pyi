@@ -1,10 +1,11 @@
 # mypy: ignore-errors
 
+from _typeshed import Incomplete
+from urwid.canvas import TextCanvas as TextCanvas
+
 from .constants import Align as Align, Sizing as Sizing, WrapMode as WrapMode
 from .text import Text as Text
 from .widget import Widget as Widget
-from _typeshed import Incomplete
-from urwid.canvas import TextCanvas as TextCanvas
 
 class ProgressBar(Widget):
     eighths: str

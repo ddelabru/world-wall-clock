@@ -1,9 +1,11 @@
 import signal
 import typing
-from .abstract_loop import EventLoop
 from collections.abc import Callable
 from types import FrameType
+
 from typing_extensions import Literal
+
+from .abstract_loop import EventLoop
 
 class GLibEventLoop(EventLoop):
     def __init__(self) -> None: ...

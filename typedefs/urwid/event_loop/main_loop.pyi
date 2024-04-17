@@ -1,7 +1,8 @@
 # mypy: ignore-errors
 
-from _typeshed import Incomplete
 from collections.abc import Callable, Iterable
+
+from _typeshed import Incomplete
 from urwid.display_common import BaseScreen
 from urwid.widget import Widget
 

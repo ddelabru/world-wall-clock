@@ -1,6 +1,7 @@
 import typing
-from _typeshed import Incomplete
 from collections.abc import Iterator, Sequence
+
+from _typeshed import Incomplete
 from urwid.canvas import CanvasError as CanvasError, TextCanvas as TextCanvas
 from urwid.escape import SAFE_ASCII_DEC_SPECIAL_RE as SAFE_ASCII_DEC_SPECIAL_RE
 from urwid.util import (

@@ -1,8 +1,15 @@
 # mypy: ignore-errors
 
+from _typeshed import Incomplete
+from typing_extensions import Literal
+from urwid.canvas import (
+    CanvasOverlay as CanvasOverlay,
+    CompositeCanvas as CompositeCanvas,
+)
+
 from .constants import (
-    Align as Align,
     RELATIVE_100 as RELATIVE_100,
+    Align as Align,
     Sizing as Sizing,
     VAlign as VAlign,
     WHSettings as WHSettings,
@@ -23,12 +30,6 @@ from .container import (
 from .filler import calculate_top_bottom_filler as calculate_top_bottom_filler
 from .padding import calculate_left_right_padding as calculate_left_right_padding
 from .widget import Widget as Widget
-from _typeshed import Incomplete
-from typing_extensions import Literal
-from urwid.canvas import (
-    CanvasOverlay as CanvasOverlay,
-    CompositeCanvas as CompositeCanvas,
-)
 
 class OverlayError(Exception): ...
 
@@ -39,24 +40,34 @@ class Overlay(Widget, WidgetContainerMixin, WidgetContainerListContentsMixin):
         self,
         top_w: Widget,
         bottom_w: Widget,
-        align: Literal["left", "center", "right"]
-        | Align
-        | tuple[
-            Literal["relative", "fixed left", "fixed right", WHSettings.RELATIVE], int
-        ],
-        width: Literal["pack", WHSettings.PACK]
-        | int
-        | tuple[Literal["relative", WHSettings.RELATIVE], int]
-        | None,
-        valign: Literal["top", "middle", "bottom"]
-        | VAlign
-        | tuple[
-            Literal["relative", "fixed top", "fixed bottom", WHSettings.RELATIVE], int
-        ],
-        height: Literal["pack", WHSettings.PACK]
-        | int
-        | tuple[Literal["relative", WHSettings.RELATIVE], int]
-        | None,
+        align: (
+            Literal["left", "center", "right"]
+            | Align
+            | tuple[
+                Literal["relative", "fixed left", "fixed right", WHSettings.RELATIVE],
+                int,
+            ]
+        ),
+        width: (
+            Literal["pack", WHSettings.PACK]
+            | int
+            | tuple[Literal["relative", WHSettings.RELATIVE], int]
+            | None
+        ),
+        valign: (
+            Literal["top", "middle", "bottom"]
+            | VAlign
+            | tuple[
+                Literal["relative", "fixed top", "fixed bottom", WHSettings.RELATIVE],
+                int,
+            ]
+        ),
+        height: (
+            Literal["pack", WHSettings.PACK]
+            | int
+            | tuple[Literal["relative", WHSettings.RELATIVE], int]
+            | None
+        ),
         min_width: int | None = ...,
         min_height: int | None = ...,
         left: int = ...,
@@ -83,13 +94,17 @@ class Overlay(Widget, WidgetContainerMixin, WidgetContainerListContentsMixin):
     ): ...
     def set_overlay_parameters(
         self,
-        align: Literal["left", "center", "right"]
-        | Align
-        | tuple[Literal["relative", "fixed left", "fixed right"], int],
+        align: (
+            Literal["left", "center", "right"]
+            | Align
+            | tuple[Literal["relative", "fixed left", "fixed right"], int]
+        ),
         width: int | None,
-        valign: Literal["top", "middle", "bottom"]
-        | VAlign
-        | tuple[Literal["relative", "fixed top", "fixed bottom"], int],
+        valign: (
+            Literal["top", "middle", "bottom"]
+            | VAlign
+            | tuple[Literal["relative", "fixed top", "fixed bottom"], int]
+        ),
         height: int | None,
         min_width: int | None = ...,
         min_height: int | None = ...,

@@ -1,3 +1,5 @@
+from _typeshed import Incomplete
+
 from .attr_map import AttrMap as AttrMap, AttrMapError as AttrMapError
 from .attr_wrap import AttrWrap as AttrWrap
 from .bar_graph import (
@@ -11,8 +13,8 @@ from .big_text import BigText as BigText
 from .box_adapter import BoxAdapter as BoxAdapter, BoxAdapterError as BoxAdapterError
 from .columns import Columns as Columns, ColumnsError as ColumnsError
 from .constants import (
-    Align as Align,
     RELATIVE_100 as RELATIVE_100,
+    Align as Align,
     Sizing as Sizing,
     VAlign as VAlign,
     WHSettings as WHSettings,
@@ -77,7 +79,6 @@ from .wimp import (
     RadioButton as RadioButton,
     SelectableIcon as SelectableIcon,
 )
-from _typeshed import Incomplete
 
 FLOW: Incomplete
 BOX: Incomplete

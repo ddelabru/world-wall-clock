@@ -1,14 +1,15 @@
 # mypy: ignore-errors
 
 import typing
+
 from _typeshed import Incomplete
 from typing_extensions import Literal
 from urwid import escape as escape
 from urwid.display_common import (
+    UNPRINTABLE_TRANS_TABLE as UNPRINTABLE_TRANS_TABLE,
     AttrSpec as AttrSpec,
     BaseScreen as BaseScreen,
     RealTerminal as RealTerminal,
-    UNPRINTABLE_TRANS_TABLE as UNPRINTABLE_TRANS_TABLE,
 )
 
 KEY_RESIZE: int
