@@ -2,3 +2,4 @@
 __pycache__/
 world_wall_clock/__pycache__/
 dist/
+htmlcov/

@@ -36,6 +36,9 @@ jobs:
     - name: Lint with flake8
       run: |
         poetry run flake8
+    - name: Run unit tests
+      run: |
+        poetry run pytest --cov=world_wall_clock/ tests/* 
     - name: Confirm that app runs
       run: |
         poetry run wwclock --version

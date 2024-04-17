@@ -20,15 +20,13 @@ import abc
 import json
 from argparse import ArgumentParser, Namespace
 from collections.abc import Callable
-from datetime import date, datetime, timezone, tzinfo
+from datetime import date, datetime, tzinfo
 from pathlib import Path
 from typing import Any, List, Literal, Optional, Set, Tuple
 from zoneinfo import ZoneInfo, available_timezones
 
 import urwid
 from xdg_base_dirs import xdg_config_home
-
-from . import VERSION
 
 CURSES_AVAILABLE: bool
 try:
@@ -39,6 +37,7 @@ except ImportError:
     CURSES_AVAILABLE = False
 
 
+VERSION: str = "0.1.3"
 DEFAULT_CLOCKS: List[str] = [
     "Pacific/Niue",
     "America/Santiago",
@@ -90,10 +89,7 @@ class ClockWidget(urwid.LineBox):
             tzname: Optional[str] = tz.tzname(dt)
             self._title = tzkey if tzkey == tzname else f"{tzkey} ({tzname})"
         else:
-            dt_utc: datetime = datetime.utcfromtimestamp(dt.timestamp())
-            tz = timezone(dt - dt_utc)
-            self._title = tz.tzname(dt)
-            tzname = tz.tzname(dt)
+            self._title = tzname = dt.astimezone().tzname()
         if hasattr(self, "title_widget"):
             self.set_title(self._title)
         return old_title != self._title
@@ -120,8 +116,6 @@ class DatetimeIntEdit(urwid.IntEdit):
         self.set_edit_pos(0)
 
     def keypress(self, size: Tuple[int], key: str) -> Optional[str]:
-        if self.edit_pos >= self.maxlen:
-            self.set_edit_pos(self.maxlen - 1)
         if key in {"up", "down"}:
             return key
         if key == "tab":
@@ -142,14 +136,14 @@ class ListBoxMeta(urwid.WidgetMeta, abc.ABCMeta):
 
 
 class TZPickerBase(urwid.ListBox, metaclass=ListBoxMeta):
-    def append(self, label: str) -> None:
-        pass
+    @abc.abstractmethod
+    def append(self, label: str) -> None: ...
 
-    def remove(self, label: str) -> None:
-        pass
+    @abc.abstractmethod
+    def remove(self, label: str) -> None: ...
 
-    def get_tz(self) -> Optional[tzinfo]:
-        return None
+    @abc.abstractmethod
+    def get_tz(self) -> Optional[tzinfo]: ...
 
 
 class DatetimePicker(object):
@@ -323,8 +317,7 @@ class MinuteEdit(DatetimeIntEdit):
 
 
 class ActiveTZPicker(TZPickerBase):
-    def __init__(self, foreign_clocks: List[str], dp: DatetimePicker) -> None:
-        self.dp: DatetimePicker = dp
+    def __init__(self, foreign_clocks: List[str]) -> None:
         new_items: List[urwid.AttrMap] = [self.wrap_label("local")] + [
             self.wrap_label(tz) for tz in foreign_clocks
         ]
@@ -386,8 +379,9 @@ class MainLoop(urwid.MainLoop):
         screen: urwid.BaseScreen | None = None,
         handle_mouse: bool = True,
         input_filter: Callable[[List[str], List[int]], List[str]] | None = None,
-        unhandled_input: Callable[[str | Tuple[str, int, int, int]], bool]
-        | None = None,
+        unhandled_input: (
+            Callable[[str | Tuple[str, int, int, int]], bool] | None
+        ) = None,
         event_loop: urwid.EventLoop | None = None,
         pop_ups: bool = False,
         update_fn: Callable[[], Any] = lambda: None,
@@ -441,6 +435,7 @@ class App:
                 self.dp.tz.append(cb.label)
             self.write_clock_list()
             self.fill_clock_grid(rebuild_clocks=True)
+            self.update_clocks()
             return None
 
         tz_checklist: List[urwid.CheckBox] = [
@@ -510,7 +505,7 @@ class App:
         self.dp.day = DayEdit(day, self.dp)
         self.dp.hour = HourEdit(hour)
         self.dp.mins = MinuteEdit(mins)
-        self.dp.tz = ActiveTZPicker(self.foreign_clocks, self.dp)
+        self.dp.tz = ActiveTZPicker(self.foreign_clocks)
         self._new_tz_picker: bool = False
         widgets: List[Tuple[int, urwid.Widget] | urwid.Widget] = [
             (len(button.label) + 5, button),
@@ -639,11 +634,11 @@ def parse_args() -> Namespace:
 
 
 def main() -> None:
-    app: App = App()
     args: Namespace = parse_args()
     if args.version:
         print(VERSION)
         return
+    app: App = App()
     try:
         app.main_loop.run()
     except KeyboardInterrupt:

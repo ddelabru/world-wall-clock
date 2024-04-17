@@ -33,9 +33,11 @@ class GridFlow(WidgetWrap, WidgetContainerMixin, WidgetContainerListContentsMixi
         cell_width: int,
         h_sep: int,
         v_sep: int,
-        align: Literal["left", "center", "right"]
-        | Align
-        | tuple[Literal["relative", WHSettings.RELATIVE], int],
+        align: (
+            Literal["left", "center", "right"]
+            | Align
+            | tuple[Literal["relative", WHSettings.RELATIVE], int]
+        ),
     ) -> None: ...
     @property
     def cells(self): ...

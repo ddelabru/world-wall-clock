@@ -86,8 +86,10 @@ class ListBox(Widget, WidgetContainerMixin):
     def get_cursor_coords(self, size: tuple[int, int]) -> tuple[int, int] | None: ...
     def set_focus_valign(
         self,
-        valign: Literal["top", "middle", "bottom"]
-        | tuple[Literal["fixed top", "fixed bottom", "relative"], int],
+        valign: (
+            Literal["top", "middle", "bottom"]
+            | tuple[Literal["fixed top", "fixed bottom", "relative"], int]
+        ),
     ): ...
     def set_focus(
         self, position, coming_from: Literal["above", "below"] | None = ...

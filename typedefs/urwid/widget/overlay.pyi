@@ -40,24 +40,34 @@ class Overlay(Widget, WidgetContainerMixin, WidgetContainerListContentsMixin):
         self,
         top_w: Widget,
         bottom_w: Widget,
-        align: Literal["left", "center", "right"]
-        | Align
-        | tuple[
-            Literal["relative", "fixed left", "fixed right", WHSettings.RELATIVE], int
-        ],
-        width: Literal["pack", WHSettings.PACK]
-        | int
-        | tuple[Literal["relative", WHSettings.RELATIVE], int]
-        | None,
-        valign: Literal["top", "middle", "bottom"]
-        | VAlign
-        | tuple[
-            Literal["relative", "fixed top", "fixed bottom", WHSettings.RELATIVE], int
-        ],
-        height: Literal["pack", WHSettings.PACK]
-        | int
-        | tuple[Literal["relative", WHSettings.RELATIVE], int]
-        | None,
+        align: (
+            Literal["left", "center", "right"]
+            | Align
+            | tuple[
+                Literal["relative", "fixed left", "fixed right", WHSettings.RELATIVE],
+                int,
+            ]
+        ),
+        width: (
+            Literal["pack", WHSettings.PACK]
+            | int
+            | tuple[Literal["relative", WHSettings.RELATIVE], int]
+            | None
+        ),
+        valign: (
+            Literal["top", "middle", "bottom"]
+            | VAlign
+            | tuple[
+                Literal["relative", "fixed top", "fixed bottom", WHSettings.RELATIVE],
+                int,
+            ]
+        ),
+        height: (
+            Literal["pack", WHSettings.PACK]
+            | int
+            | tuple[Literal["relative", WHSettings.RELATIVE], int]
+            | None
+        ),
         min_width: int | None = ...,
         min_height: int | None = ...,
         left: int = ...,
@@ -84,13 +94,17 @@ class Overlay(Widget, WidgetContainerMixin, WidgetContainerListContentsMixin):
     ): ...
     def set_overlay_parameters(
         self,
-        align: Literal["left", "center", "right"]
-        | Align
-        | tuple[Literal["relative", "fixed left", "fixed right"], int],
+        align: (
+            Literal["left", "center", "right"]
+            | Align
+            | tuple[Literal["relative", "fixed left", "fixed right"], int]
+        ),
         width: int | None,
-        valign: Literal["top", "middle", "bottom"]
-        | VAlign
-        | tuple[Literal["relative", "fixed top", "fixed bottom"], int],
+        valign: (
+            Literal["top", "middle", "bottom"]
+            | VAlign
+            | tuple[Literal["relative", "fixed top", "fixed bottom"], int]
+        ),
         height: int | None,
         min_width: int | None = ...,
         min_height: int | None = ...,

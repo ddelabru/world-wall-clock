@@ -28,9 +28,11 @@ class Filler(WidgetDecoration):
     def __init__(
         self,
         body: Widget,
-        valign: Literal["top", "middle", "bottom"]
-        | VAlign
-        | tuple[Literal["relative", WHSettings.RELATIVE], int] = ...,
+        valign: (
+            Literal["top", "middle", "bottom"]
+            | VAlign
+            | tuple[Literal["relative", WHSettings.RELATIVE], int]
+        ) = ...,
         height: int | Literal["pack"] | tuple[Literal["relative"], int] | None = ...,
         min_height: int | None = ...,
         top: int = ...,
@@ -57,8 +59,9 @@ class Filler(WidgetDecoration):
 
 def calculate_top_bottom_filler(
     maxrow: int,
-    valign_type: Literal["top", "middle", "bottom", "relative", WHSettings.RELATIVE]
-    | VAlign,
+    valign_type: (
+        Literal["top", "middle", "bottom", "relative", WHSettings.RELATIVE] | VAlign
+    ),
     valign_amount: int,
     height_type: Literal[
         "given",

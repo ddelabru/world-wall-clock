@@ -29,12 +29,16 @@ class Padding(WidgetDecoration):
     def __init__(
         self,
         w: Widget,
-        align: Literal["left", "center", "right"]
-        | Align
-        | tuple[Literal["relative", WHSettings.RELATIVE], int] = ...,
-        width: int
-        | Literal["pack", "clip", WHSettings.PACK, WHSettings.CLIP]
-        | tuple[Literal["relative", WHSettings.RELATIVE], int] = ...,
+        align: (
+            Literal["left", "center", "right"]
+            | Align
+            | tuple[Literal["relative", WHSettings.RELATIVE], int]
+        ) = ...,
+        width: (
+            int
+            | Literal["pack", "clip", WHSettings.PACK, WHSettings.CLIP]
+            | tuple[Literal["relative", WHSettings.RELATIVE], int]
+        ) = ...,
         min_width: int | None = ...,
         left: int = ...,
         right: int = ...,

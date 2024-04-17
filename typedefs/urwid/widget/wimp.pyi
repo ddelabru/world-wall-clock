@@ -65,10 +65,9 @@ class CheckBox(WidgetWrap):
         label: str,
         state: typing.Literal["mixed"] | bool = ...,
         has_mixed: typing.Literal[True] = ...,
-        on_state_change: Callable[
-            [Self, bool | typing.Literal["mixed"], _T], typing.Any
-        ]
-        | None = ...,
+        on_state_change: (
+            Callable[[Self, bool | typing.Literal["mixed"], _T], typing.Any] | None
+        ) = ...,
         user_data: _T = ...,
         checked_symbol: str | None = ...,
     ) -> None: ...
@@ -78,8 +77,9 @@ class CheckBox(WidgetWrap):
         label: str,
         state: typing.Literal["mixed"] | bool = ...,
         has_mixed: typing.Literal[True] = ...,
-        on_state_change: Callable[[Self, bool | typing.Literal["mixed"]], typing.Any]
-        | None = ...,
+        on_state_change: (
+            Callable[[Self, bool | typing.Literal["mixed"]], typing.Any] | None
+        ) = ...,
         user_data: None = ...,
         checked_symbol: str | None = ...,
     ) -> None: ...
