@@ -37,7 +37,7 @@ except ImportError:
     CURSES_AVAILABLE = False
 
 
-VERSION: str = "0.1.3"
+VERSION: str = "0.1.4"
 DEFAULT_CLOCKS: List[str] = [
     "Pacific/Niue",
     "America/Santiago",
