@@ -23,6 +23,7 @@ jobs:
         pip install poetry
     - name: Install dependencies
       run: |
+        apk add git
         poetry install
     - name: Check types with mypy
       run: |
