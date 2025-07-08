@@ -21,6 +21,7 @@ import json
 from argparse import ArgumentParser, Namespace
 from collections.abc import Callable
 from datetime import date, datetime, tzinfo
+from math import floor
 from pathlib import Path
 from typing import Any, List, Literal, Optional, Set, Tuple
 from zoneinfo import ZoneInfo, available_timezones
@@ -388,7 +389,6 @@ class MainLoop(urwid.MainLoop):
         refresh_rate: float = 10.0,
     ) -> None:
         self.update_fn: Callable[[], Any] = update_fn
-        self.tick_secs: float = 1.0 / refresh_rate
         super().__init__(
             widget,
             palette=palette,
@@ -406,7 +406,7 @@ class MainLoop(urwid.MainLoop):
 
     def tick(self, loop: urwid.MainLoop, user_data: Any | None) -> None:
         self.update_fn()
-        self.set_alarm_in(self.tick_secs, self.tick)
+        self.set_alarm_at(floor(datetime.now().timestamp()) + 1.0, self.tick)
 
 
 class App:
