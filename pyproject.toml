@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "world-wall-clock"
-version = "0.1.4"
+version = "0.1.5"
 description = "TUI world clock application"
 authors = ["Dominic Delabruere <dominic.delabruere@gmail.com>"]
 license = "GPL-3.0-or-later"
